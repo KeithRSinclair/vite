@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-     <!-- Tailwind CSS CDN -->
-     
+    <meta charset="UTF-8" />     
      <!-- Roboto and Exo 2 Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,21 +11,21 @@
     <link rel="icon" type="image/svg+xml" href="/vite/globe.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Keith's Globe</title>
-    <script type="module" crossorigin src="/vite/assets/index.3bbc72c0.js"></script>
-    <link rel="stylesheet" href="/vite/assets/index.5b52b417.css">
+    <script type="module" crossorigin src="/vite/assets/index.a7789b00.js"></script>
+    <link rel="stylesheet" href="/vite/assets/index.56b25b98.css">
   </head>
   <body>
     <div class="flex h-screen bg-black">
-      <div class="w-1/2 flex flex-col justify-center px-8 leading-6">
-        <div style="max-width:500px;" class="mx-auto">
-        <h1 class="text-white uppercase text-5xl mb-8 font-exo">World Population Data</h1>
+      <div class="w-1/2 flex flex-col justify-center px-8 ">
+        <div style="max-width:500px;" class="mx-auto ">
+        <h1 class="text-white uppercase text-5xl mb-8 font-exo leading-2">World Population Data</h1>
         <p class="text-gray-400 mb-8 font-roboto">A cool 3D globe to illustrate the population of the world (Data still to come)</p>
         <div class="">
           <a href="https://www.worldometers.info/#:~:text=World%20Population%3A&text=is%20projected%20to%20reach%208,per%20year%20to%20the%20total." target="_blank" class="text-white bg-green-400 inline-block px-8 py-4 rounded-full uppercase font-exo hover:bg-gray-700">Learn More</a>
         </div>
       </div>
       </div>
-      <div class="w-1/2" id="canvasContainer">
+      <div class="w-1/2 boxShadowBlur" id="canvasContainer">
         <canvas></canvas>
       </div>      
     </div>
