@@ -12,3 +12,7 @@ body {
   font-family: "Roboto Mono", monospace;
   text-shadow: 2px 2px 3px rgba(0, 0, 139, 0.6);
 }
+
+.boxShadowBlur {
+  box-shadow: 0 0 10px gray;
+}

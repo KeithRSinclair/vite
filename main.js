@@ -5,10 +5,10 @@ import vertexShader from './shaders/vertex.glsl'
 import fragmentShader from './shaders/fragment.glsl'
 import atmosphereVertexShader from './shaders/atmosphereVertex.glsl'
 import atmosphereFragmentShader from './shaders/atmosphereFragment.glsl'
+import './tailwind.css'
 import './style.css'
 
 const canvasContainer = document.querySelector('#canvasContainer')
-
 
 
 const scene = new THREE.Scene()
@@ -17,7 +17,12 @@ const renderer = new THREE.WebGLRenderer({antialias: true, canvas: document.quer
 renderer.setSize(canvasContainer.offsetWidth, canvasContainer.offsetHeight)
 renderer.setPixelRatio(window.devicePixelRatio)
 
-new OrbitControls(camera, renderer.domElement)
+const controls = new OrbitControls(camera, renderer.domElement)
+controls.maxDistance = 20.5
+controls.minDistance = 10.5
+//controls.enableZoom = false
+
+
 
 //Create a Sphere
 const sphere = new THREE.Mesh(new THREE.SphereGeometry(5, 50, 50), new THREE.ShaderMaterial({
@@ -51,6 +56,7 @@ scene.add(group)
 const starGeometry = new THREE.BufferGeometry()
 const starMaterial = new THREE.PointsMaterial({color: 0xffffff})
 
+
 const starVertices = []
 for (let i = 0; i < 10000; i++) {
   const x = (Math.random() - 0.5) * 2000
@@ -64,13 +70,15 @@ starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVerti
 const stars = new THREE.Points(starGeometry, starMaterial)
 scene.add(stars)
 
+
+
 camera.position.z = 15
 
-const point = new THREE.Mesh(new THREE.SphereGeometry(0.1, 50, 50), new THREE.MeshBasicMaterial({color: 0xff0000}))
+function createPoint(lat, lng){
+  const point = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.8), new THREE.MeshBasicMaterial({color: 0xff0000}))
 
-//23.6345° N, 102.5528° W Mexico 
-const latitude = (23.6345 / 180) * Math.PI
-const longitude = (-102.5528 / 180) * Math.PI
+const latitude = (lat / 180) * Math.PI
+const longitude = (lng / 180) * Math.PI
 const radius = 5
 const x = radius * Math.cos(latitude) * Math.sin(longitude)
 const y = radius * Math.sin(latitude)
@@ -79,7 +87,23 @@ const z = radius * Math.cos(latitude) * Math.cos(longitude)
 point.position.x = x
 point.position.y = y
 point.position.z = z
+
+point.lookAt(0, 0, 0)
+
+
+
 group.add(point)
+
+}
+//Mexico
+createPoint(23.6345, -102.5528)
+//Brazil
+createPoint(-14.2350, -51.9253)
+//India
+createPoint(20.5937, 78.9629)
+//South Africa
+createPoint(-30.5595, 22.9375)
+
 
 sphere.rotation.y = -Math.PI / 2
 
@@ -93,9 +117,11 @@ function animate(){
   renderer.render(scene, camera)
   group.rotation.y += 0.002  
   //sphere.rotation.y += 0.002
-  //gsap.to(group.rotation, { x: -mouse.y * 0.2, y: mouse.x * 1.8})
+  // if (mouse.x) {
+  //   gsap.to(group.rotation, { x: -mouse.y * 0.2, y: mouse.x * 1.8})
+  // } 
 
-  stars.rotation.x += 0.00002
+  stars.rotation.x += 0.00003
 }
 
 animate()
