@@ -75,7 +75,7 @@ scene.add(stars)
 camera.position.z = 15
 
 function createPoint(lat, lng){
-  const point = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.8), new THREE.MeshBasicMaterial({color: 0xff0000}))
+  const point = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.8), new THREE.MeshBasicMaterial({color: '#FF10F0' }))
 
 const latitude = (lat / 180) * Math.PI
 const longitude = (lng / 180) * Math.PI
@@ -90,9 +90,18 @@ point.position.z = z
 
 point.lookAt(0, 0, 0)
 
-
+point.geometry.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0, -0.4))
 
 group.add(point)
+
+gsap.to(point.scale, {
+  z: 0,
+  duration: 5.5,
+  yoyo: true,
+  repeat: -1,
+  ease: 'linear',
+  delay: Math.random()
+})
 
 }
 //Mexico
