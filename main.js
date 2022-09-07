@@ -74,8 +74,8 @@ scene.add(stars)
 
 camera.position.z = 15
 
-function createPoint(lat, lng){
-  const point = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.8), new THREE.MeshBasicMaterial({color: '#FF10F0' }))
+function createPoint({lat, lng, country, population}){
+  const point = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.8), new THREE.MeshBasicMaterial({color: '#FF10F0', opacity: 0.4, transparent: true }))
 
 const latitude = (lat / 180) * Math.PI
 const longitude = (lng / 180) * Math.PI
@@ -103,15 +103,18 @@ gsap.to(point.scale, {
   delay: Math.random()
 })
 
+point.country = country
+point.population = population
+
 }
 //Mexico
-createPoint(23.6345, -102.5528)
+createPoint({lat: 23.6345, lng: -102.5528, country: 'Mexico', population: '128.9 million'})
 //Brazil
-createPoint(-14.2350, -51.9253)
+createPoint({ lat:-14.2350, lng: -51.9253, country: 'Brazil', population: '212.6 million' })
 //India
-createPoint(20.5937, 78.9629)
+createPoint({ lat: 20.5937, lng: 78.9629, country: 'India', population: '1.38 Billion'})
 //South Africa
-createPoint(-30.5595, 22.9375)
+createPoint({ lat: -30.5595, lng: 22.9375, country: 'South Africa', population: '59.31 million'})
 
 
 sphere.rotation.y = -Math.PI / 2
@@ -121,22 +124,65 @@ const mouse = {
   y: undefined
 }
 
+const raycaster = new THREE.Raycaster()
+const popUpEl = document.querySelector('#popUpEl')
+const populationEl = document.querySelector('#populationEl')
+const populationValueEl = document.querySelector('#populationValueEl')
+
+
 function animate(){
   requestAnimationFrame(animate)
   renderer.render(scene, camera)
-  group.rotation.y += 0.002  
+  group.rotation.y += 0.002
+  
+  
   //sphere.rotation.y += 0.002
   // if (mouse.x) {
   //   gsap.to(group.rotation, { x: -mouse.y * 0.2, y: mouse.x * 1.8})
   // } 
 
+  // update the picking ray with the camera and pointer position
+	raycaster.setFromCamera( mouse, camera );
+
+	// calculate objects intersecting the picking ray
+	const intersects = raycaster.intersectObjects( group.children.filter(mesh => {
+      return mesh.geometry.type === 'BoxGeometry'
+  }) )
+
+  group.children.forEach((mesh) => {
+    mesh.material.opacity = 0.4
+  })
+
+  gsap.set(popUpEl, {
+    display: 'none'
+  })
+
+	for ( let i = 0; i < intersects.length; i ++ ) {
+    const point = intersects[ i ].object
+		point.material.opacity = 1
+    gsap.set(popUpEl, {
+      display: 'block'
+    })
+    populationEl.innerHTML = point.country
+    populationValueEl.innerHTML = point.population
+	}
+
+	renderer.render( scene, camera );
+
   stars.rotation.x += 0.00003
 }
+
 
 animate()
 
 
-addEventListener('mousemove', () => {
-  mouse.x = (event.clientX / innerWidth) * 2 - 1
-  mouse.y = (event.clientY / innerHeight) * 2 + 1
+addEventListener('mousemove', (event) => {  
+  mouse.x = ((event.clientX - innerWidth / 2) / (innerWidth / 2)) * 2 - 1
+  //mouse.x = (event.clientX / innerWidth) * 2 - 1
+  mouse.y = -(event.clientY / innerHeight) * 2 + 1
+
+  gsap.set(popUpEl, {
+    x: event.clientX ,
+    y: event.clientY
+  })
 })
